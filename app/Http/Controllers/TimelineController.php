@@ -16,8 +16,20 @@ class TimelineController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $statuses = Status::where('user_id', Auth::user()->id)->get();
+        $following = Auth::user()->follows->pluck('id');
 
-        return view ('timeline',compact('statuses'));
+        // Status::where digunakan untuk menampilkan status kita sendiri
+        // $statuses = Status::where('user_id', Auth::user()->id)->get();
+        // dapat jug menggunakan 
+        // $statuses = Auth::user()->statuses;
+
+        // menggunkan whereIn untuk menampilkan status milik orang yg kita follow
+        $statuses = Status::whereIn('user_id', $following)
+            ->orWhere('user_id', Auth::user()->id)
+            ->latest()
+            ->get();
+
+
+        return view('timeline', compact('statuses'));
     }
 }

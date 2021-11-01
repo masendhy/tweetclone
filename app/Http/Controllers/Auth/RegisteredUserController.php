@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -40,6 +41,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
+            'username'=>'s>' . strtolower(Str::random(9)),
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
